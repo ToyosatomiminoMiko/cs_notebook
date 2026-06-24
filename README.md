@@ -200,23 +200,23 @@ error:`Reason: No device found on target.`
 
 range: $[0,2^x-1]$
 
-| type       |  size  |               range                |
-| :--------- | :----: | :--------------------------------: |
-| `uint8_t`  | 1 Byte |            [`0`,`255`]             |
-| `uint16_t` | 2 Byte |           [`0`,`65,535`]           |
-| `uint32_t` | 4 Byte |       [`0`,`4,294,967,295`]        |
-| `uint64_t` | 8 Byte | [`0`,`18,446,744,073,709,551,615`] |
+| type       |  size  |               range               |
+| :--------- | :----: | :-------------------------------: |
+| `uint8_t`  | 1 Byte |            `[0,+255]`             |
+| `uint16_t` | 2 Byte |           `[0,+65,535]`           |
+| `uint32_t` | 4 Byte |       `[0,+4,294,967,295]`        |
+| `uint64_t` | 8 Byte | `[0,+18,446,744,073,709,551,615]` |
 
 ##### 有符号整数
 
 range: $[-2^{x-1},2^{x-1}-1]$
 
-| type      |  size  |                           range                            |
-| :-------- | :----: | :--------------------------------------------------------: |
-| `int8_t`  | 1 Byte |                       [`-128`,`127`]                       |
-| `int16_t` | 2 Byte |                    [`-32,768`,`32,767`]                    |
-| `int32_t` | 4 Byte |             [`-2,147,483,648`,`2,147,483,647`]             |
-| `int64_t` | 4 Byte | [`-9,223,372,036,854,775,808`,`9,223,372,036,854,775,807`] |
+| type      |  size  |                           range                           |
+| :-------- | :----: | :-------------------------------------------------------: |
+| `int8_t`  | 1 Byte |                       `[-128,+127]`                       |
+| `int16_t` | 2 Byte |                    `[-32,768,+32,767]`                    |
+| `int32_t` | 4 Byte |             `[-2,147,483,648,+2,147,483,647]`             |
+| `int64_t` | 4 Byte | `[-9,223,372,036,854,775,808,+9,223,372,036,854,775,807]` |
 
 ##### 类型声明
 
@@ -745,7 +745,7 @@ void MOSI_Byte(uint8_t byte)
 SDIO的所有命令和响应都是通过`SDIO_CMD`引脚传输的,任何命令的长度都是固定为**48**位.
 
 SDIO command report:
-<table border="1">
+<table>
     <thead align="center">
         <tr>
             <th>bit</th>
@@ -983,7 +983,7 @@ hex:
 125 * 0x21 = 4125
 1Byte 对应像素的结构
 
-<table border="1">
+<table>
     <tbody>
         <tr>
             <td><code>7</code></td>
@@ -1230,38 +1230,51 @@ NAND, NOR
 
 NVM,*Non-Volatile Memory*
 
-- ROM
+##### ROM
+
 *Read-Only Memory*
 在芯片制造时,通过掩膜工艺将数据"刻"在电路里.一旦生产完成,数据永久固定,无法修改
-- PROM
+
+##### PROM
+
 *Programmable ROM*
 出厂时为全"1"(或全"0").用户使用专用的编程器,通过高电压将内部的熔丝烧断,从而将某些位写为"0"(或"1").一次性编程.
-- EPROM
+
+##### EPROM
+
 *Erasable Programmable ROM*
 利用浮栅晶体管存储电荷.编程时用高电压注入电荷,擦除时需要紫外线照射芯片上的石英窗口约20分钟,使电荷获得能量逃逸,从而擦除整个芯片
-- EEPROM
+
+##### EEPROM
+
 *Electrically Erasable Programmable ROM*
-同样是浮栅晶体管,但结构更精细,允许用电信号进行擦除和写入.关键是可以按字节进行擦写
-- Flash
+同样是浮栅晶体管,但结构更精细,允许用电信号进行擦除和写入.关键是可以**按字节进行擦写**
+
+##### Flash
+
 可看作是EEPROM的升级
-  - NOR Flash
-  晶体管并联结构,读取速度快,支持字节级的随机读取,可以直接在芯片上运行代码.但密度低,成本高,按"块"擦除,写入速度慢.主要用于存储关键程序代码,如主板BIOS,路由器固件,嵌入式系统启动代码等.
-  - NAND Flash
-  晶体管串联结构,密度高,写入和擦除速度快,成本低,但只能按"块"或"页"进行随机读取(类似硬盘).主要用于大容量数据存储,如SSD,U盘,手机,相机存储卡等.
+
+- NOR Flash
+晶体管**并联**结构,读取速度快,支持字节级的随机读取,可以直接在芯片上运行代码.但密度低,成本高,按"块"擦除,写入速度慢.主要用于存储关键程序代码,如主板BIOS,路由器固件,嵌入式系统启动代码等.
+
+- NAND Flash
+晶体管**串联**结构,密度高,写入和擦除速度快,成本低,但只能按"块"或"页"进行随机读取(类似硬盘).主要用于大容量数据存储,如SSD,U盘,手机,相机存储卡等.
 
 #### 易失性存储器
 
 *Volatile Memory*
 随机存储器(RAM,*Random Access Memory*)
 
-- DRAM
+##### DRAM
+
 *Dynamic RAM*
 电容存储 动态刷新 内存
 
 双倍数据速率(DDR,double data rate)
 上升沿下降沿传输
 
-- SRAM
+##### SRAM
+
 *Static RAM*
 逻辑门电路 不需要刷新
 CPU Register(触发器) & L1,L2 cache(6晶体管)
@@ -1276,12 +1289,25 @@ CPU Register(触发器) & L1,L2 cache(6晶体管)
 4. SSD (Solid State Disk) (NAND Flash) (EEPROM)
 5. HDD (Hard Disk Drive)
 
-## Turing Completa
+## Turing Complete
 
 ### Assembly
+
+ISA *Instruction Set Architecture*
+
+指令集架构
 
 - `0b00`: Immediate 立即数
 - `0b01`: Compute 计算
 - `0b10`: Copy 复制
 - `0b11`: Condition 条件
+
+😭回来吧intel核芯显卡😭
+🌟Linux用户最骄傲的信仰🌟
+⚡️历历在目的驱动⚡️
+😭眼泪莫名在流淌😭
+💥依稀记得滚不挂💥
+👍还有给力的兼容👍
+
+互联网软件基础设施
 *Internet Software Infrastructure*
