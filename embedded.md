@@ -2,8 +2,6 @@
 
 # Embedded note
 
-这个笔记本因为不小心的误操作清除了内容,但通过VScode的本地历史记录恢复了,故避免以后再次出现此类情况,现公开该笔记本(`2024.10.24.03:53:41`)
-
 该笔记本内含有html,若要消除lsp报错需设置:
 
 ```json
@@ -1224,7 +1222,9 @@ NAND, NOR
 ### 存储技术
 
 **非易失性存储器**: 断电后数据不会丢失.ROM家族和Flash都属于此类.
-**易失性存储器**: 断电后数据立即丢失.SRAM和DRAM属于此类.
+
+**易失性存储器**: DRAM 断电后不能保持数据.SRAM和DRAM属于此类;
+断电后电容电荷不会"立即"完全消失,会短时间残留,但逻辑上属于易失性.
 
 #### 非易失性存储器(NVM)
 
@@ -1232,18 +1232,20 @@ NVM,*Non-Volatile Memory*
 
 ##### ROM
 
+*Mask ROM*
 *Read-Only Memory*
+只有掩膜 ROM 是制造时固定、不可修改
 在芯片制造时,通过掩膜工艺将数据"刻"在电路里.一旦生产完成,数据永久固定,无法修改
 
 ##### PROM
 
 *Programmable ROM*
-出厂时为全"1"(或全"0").用户使用专用的编程器,通过高电压将内部的熔丝烧断,从而将某些位写为"0"(或"1").一次性编程.
+出厂时为全"1"(或全"0"),取决于工艺.用户使用专用的编程器,通过高电压将内部的熔丝烧断(熔丝型,也有反熔丝型),从而将某些位写为"0"(或"1").一次性编程.
 
 ##### EPROM
 
 *Erasable Programmable ROM*
-利用浮栅晶体管存储电荷.编程时用高电压注入电荷,擦除时需要紫外线照射芯片上的石英窗口约20分钟,使电荷获得能量逃逸,从而擦除整个芯片
+利用浮栅晶体管存储电荷.编程时用高电压注入电荷,擦除时需要紫外线照射芯片上的石英窗口约20..30分钟,使电荷获得能量逃逸,从而擦除整个芯片
 
 ##### EEPROM
 
@@ -1252,16 +1254,17 @@ NVM,*Non-Volatile Memory*
 
 ##### Flash
 
-可看作是EEPROM的升级
+Flash是EEPROM浮栅技术的衍生/变体,但关键区别是: EEPROM 可按字节擦写, Flash 通常按块/页擦除.
 
 - NOR Flash
 晶体管**并联**结构,读取速度快,支持字节级的随机读取,可以直接在芯片上运行代码.但密度低,成本高,按"块"擦除,写入速度慢.主要用于存储关键程序代码,如主板BIOS,路由器固件,嵌入式系统启动代码等.
 
 - NAND Flash
-晶体管**串联**结构,密度高,写入和擦除速度快,成本低,但只能按"块"或"页"进行随机读取(类似硬盘).主要用于大容量数据存储,如SSD,U盘,手机,相机存储卡等.
+晶体管**串联**结构,密度高,写入和擦除速度快,成本低,按页读写,按块擦除,不能像 NOR 那样按字节随机读取.主要用于大容量数据存储,如 SSD,U盘,手机,相机存储卡等.
 
 #### 易失性存储器
 
+SRAM 和 DRAM 是典型的易失性 RAM
 *Volatile Memory*
 随机存储器(RAM,*Random Access Memory*)
 
@@ -1276,7 +1279,7 @@ NVM,*Non-Volatile Memory*
 ##### SRAM
 
 *Static RAM*
-逻辑门电路 不需要刷新
+SRAM 由双稳态触发器/锁存器构成,不需要刷新
 CPU Register(触发器) & L1,L2 cache(6晶体管)
 
 #### 排位
@@ -1285,9 +1288,15 @@ CPU Register(触发器) & L1,L2 cache(6晶体管)
 
 1. Register (Flip-Flops)
 2. L1,L2 Cache (SRAM)
-3. memory (DRAM)
-4. SSD (Solid State Disk) (NAND Flash) (EEPROM)
-5. HDD (Hard Disk Drive)
+3. L3 Cache
+4. memory (DRAM)
+5. SSD (Solid State Drive) (NAND Flash)
+6. HDD (Hard Disk Drive)
+
+#### 读写
+
+机械硬盘 HDD: 小物理读写单位通常是**扇区(sector)**,如 512B 或 4kB.
+固态硬盘 SSD: NAND 闪存内部最小读写单位是**页(page)**,最小擦除单位是**块(block)**.
 
 ## Turing Complete
 
