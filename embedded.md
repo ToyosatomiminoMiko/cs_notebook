@@ -21,7 +21,7 @@
 - Flash 512 kBytes
 - RAM 64 kBytes
 - IO 112
-- Frequecy(Max) 72 MHz
+- Frequency(Max) 72 MHz
 
 **Linker Settings**
 default:
@@ -124,7 +124,7 @@ error:`Reason: No device found on target.`
 6. **MCU Settings** ->
 7. **Use float with printf from newlib-nano (-u printf float)**
 
-#### 调试模式(Dubug)
+#### 调试模式(Debug)
 
 - **step into**:进入子函数执行
 - **step over**:不进入子函数执行
@@ -149,17 +149,17 @@ error:`Reason: No device found on target.`
 - *Universal Asynchronous Receiver Transmitter*
 - 通用异步串行接收发送器
 - 位识别方式: 波特率
-- 半双工
+- 异步 UART 物理上是全双工;
 
 #### **USART**
 
 - *Universal Synchronous Asynchronous Receiver Transmitter*
 - 通用同步异步串行接收发送器
-- 位识别方式: 时钟
+- 位识别方式: 同步模式:时钟;异步模式:波特率;
 
 #### **RS232**
 
-- *Recommended Standard 232*
+- *Recommended StanCard 232*
 - 位识别方式: 波特率
 
 #### **I2C**
@@ -176,7 +176,7 @@ error:`Reason: No device found on target.`
 
 #### **RS485**
 
-- *Recommended Standard 485*
+- *Recommended StanCard 485*
 - 位识别方式: 差分信号 波特率
 
 #### **CAN**
@@ -190,7 +190,7 @@ error:`Reason: No device found on target.`
 - *Universal Serial Bus*
 - 位识别方式: 差分信号 波特率
 
-### § 外设与 HAL 库
+### § 0x02 外设与 HAL 库
 
 #### C 固定宽度整数类型
 
@@ -214,7 +214,7 @@ range: $[-2^{x-1},2^{x-1}-1]$
 | `int8_t`  | 1 Byte |                       `[-128,+127]`                       |
 | `int16_t` | 2 Byte |                    `[-32,768,+32,767]`                    |
 | `int32_t` | 4 Byte |             `[-2,147,483,648,+2,147,483,647]`             |
-| `int64_t` | 4 Byte | `[-9,223,372,036,854,775,808,+9,223,372,036,854,775,807]` |
+| `int64_t` | 8 Byte | `[-9,223,372,036,854,775,808,+9,223,372,036,854,775,807]` |
 
 ##### 类型声明
 
@@ -261,7 +261,7 @@ __weak void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim);
 ##### PWM 控制
 
 $$
-frequency=\frac{ClockSource}{Prescaler}/InternalClockDivision
+f_{PWM}=\frac{ClockSource}{(Prescaler+1)(ARR+1)}
 $$
 
 ```c
@@ -410,7 +410,7 @@ if (HAL_I2C_Mem_Write(&hi2c, uint16_t DevAddress, MemAddress, MemAddSize, &pData
 - **FSMC**/Mode/NOR 1
 - **Chip Select**: `FSMC_NE4`;
 - **Memory type**: "LCD Interface";
-- **LCD Rigster Select**: `FSMC_A10`(`RS`pin);
+- **LCD Register Select**: `FSMC_A10`(`RS`pin);
 - **Data**: "16 bits"
 - **GPIO**: "PB0->`LCD_BL`(`GPIO_PIN_SET`);
 - **RESET**: auto, 开发板电路已连接
@@ -422,7 +422,7 @@ if (HAL_I2C_Mem_Write(&hi2c, uint16_t DevAddress, MemAddress, MemAddSize, &pData
     Data setup time in HC..: 15
     Bus turn around time ..: 15
     Access mode: A
-- NOR/PSRAM timing for write accsses
+- NOR/PSRAM timing for write accesses
     Extended address setup..: 0
     Extended data setup time: 1
     Extended bus turn around: 15
@@ -633,18 +633,18 @@ uint32_t HAL_CRC_Calculate(CRC_HandleTypeDef *hcrc, uint32_t pBuffer[], uint32_t
 
 `HAL_CRC_Accumulate`不会复位,每次结果都不同
 
-#### 晶振 (Crytal)
+#### 晶振 (Crystal)
 
-| Crytal | frequency  |    (Hz) |
-| :----: | :--------: | ------: |
-|  `Y1`  | 32.768 kHz |   32768 |
-|  `Y2`  | 8.000 MHz  | 8000000 |
+| Crystal | frequency | (Hz) |
+| :-: | :-: | -: |
+| `Y1` | 32.768 kHz | `32,768` |
+| `Y2` | 8.000 MHz | `8,000,000` |
 
 #### OLED:SSD1306
 
 ##### SSD1306 size
 
-0.96inch = 2.4384mm
+0.96 inch = 24.384 mm
 8 bit *128* 8
 `1024 Byte`
 
@@ -761,7 +761,7 @@ SDIO command report:
         <tr>
             <td><b>5</b></td>
             <td><code>start</code></td>
-            <td><code>transmission</code></td>
+            <td><code>transmission_bit</code></td>
             <td colspan="6"><code>command_index</code></td>
         </tr>
         <tr>
@@ -946,6 +946,8 @@ HAL_RTC_GetDate(&hrtc, &date, RTC_FORMAT_BIN);
 HAL_RTC_GetTime(&hrtc, &time, RTC_FORMAT_BIN);
 ```
 
+*Domine, quia pius es...*
+
 格式化输出
 
 ```c
@@ -1061,7 +1063,7 @@ oscillo-scope
 
 1. **Middleware and Software Packs** /
 2. **FATFS** / **Mode**
-3. **User-defined** | **SD Dard**(只有SD卡可选SD)
+3. **User-defined** | **SD Card**(只有SD卡可选SD)
 4. `USE_LABEL`: `Enable` (支持卷标, 设置磁盘名称)
    `CODE_PAGE`: (选择语言,支持简体中文)
    `USE_LFN`: `...HEAP`(支持长文件名)
@@ -1156,7 +1158,7 @@ V: 音速(speed of sound)
 
 ### 芯片?
 
-- FPAG 制造商
+- FPGA 制造商
   - Intel®/Altera
   - AMD®/Xilinx
 - MCU 制造商
