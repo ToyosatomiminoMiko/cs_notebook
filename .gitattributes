@@ -1,0 +1,8 @@
+# GitHub 语言统计默认只计入 programming / markup 类型的文件;
+# Markdown 在 linguist 里是 prose 类型,默认整体排除在 languages 之外,
+# 但本仓库正文就是 Markdown 笔记,属于仓库内容本身,故显式标记为可统计.
+*.md linguist-detectable=true
+
+# README 默认被 documentation.yml 当作"文档"排除,本仓库只有一个 readme.md,
+# 一并计入统计,避免出现"正文全算、唯独 README 不算"的缺口.
+readme.md -linguist-documentation
